@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#0A0E17] text-slate-200;
+  }
+}
+
+/* Custom scrollbar with jade accent */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0E17;
+}
+::-webkit-scrollbar-thumb {
+  background: #134e4a;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #14b8a6;
+}
+
+/* Subtle glow effects */
+.glow-jade {
+  box-shadow: 0 0 35px -5px rgba(45, 212, 191, 0.2);
+}
+
+.glow-jade-sm {
+  box-shadow: 0 0 15px -3px rgba(45, 212, 191, 0.3);
+}
