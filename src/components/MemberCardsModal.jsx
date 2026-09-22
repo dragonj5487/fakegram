@@ -53,16 +53,15 @@ export default function MemberCardsModal({ onClose }) {
   const handleMouseUp = (e, id) => {
     const dx = Math.abs(e.clientX - dragStartPos.current.x);
     const dy = Math.abs(e.clientY - dragStartPos.current.y);
-    // If movement is very small, it's a click -> flip the card!
     if (dx < 6 && dy < 6 && !isDragging.current) {
       toggleFlip(id);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/20 backdrop-blur-[1px] animate-in fade-in duration-300 select-none">
-      {/* Translucent modal box: Background 3D cubes and JCJ remain clearly visible */}
-      <div className="relative w-full max-w-5xl rounded-3xl border border-neutral-700/60 bg-neutral-950/80 backdrop-blur-xl p-6 sm:p-10 shadow-[0_0_80px_rgba(0,0,0,0.85)] flex flex-col max-h-[92vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-transparent animate-in fade-in duration-200 select-none">
+      {/* 90% Dim right under the card, outer screen left clear */}
+      <div className="relative w-full max-w-5xl rounded-3xl border border-neutral-800/90 bg-black/90 backdrop-blur-md p-6 sm:p-10 shadow-[0_0_90px_rgba(0,0,0,0.95)] flex flex-col max-h-[92vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-neutral-800/70 pb-5 mb-8">
           <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
@@ -100,7 +99,7 @@ export default function MemberCardsModal({ onClose }) {
                     : 'hover:-translate-y-2'
                 }`}
               >
-                {/* 3D Flip Container (NO background on this container to preserve 3D children) */}
+                {/* 3D Flip Container */}
                 <div
                   style={{
                     transformStyle: 'preserve-3d',
@@ -115,12 +114,11 @@ export default function MemberCardsModal({ onClose }) {
                       backfaceVisibility: 'hidden',
                       WebkitBackfaceVisibility: 'hidden',
                     }}
-                    className="absolute inset-0 rounded-2xl p-7 flex flex-col justify-between border border-neutral-700/80 bg-gradient-to-b from-neutral-900/90 via-neutral-950/95 to-black shadow-2xl overflow-hidden cursor-pointer"
+                    className="absolute inset-0 rounded-2xl p-7 flex flex-col justify-between border border-neutral-700/80 bg-gradient-to-b from-neutral-900/95 via-neutral-950/95 to-black shadow-2xl overflow-hidden cursor-pointer"
                   >
-                    {/* Top spacer */}
                     <div className="h-4" />
 
-                    {/* Center: J, C, J huge without border, and JEON, JUNG, CHOI smaller */}
+                    {/* Center: J, C, J huge and JEON, JUNG, CHOI smaller */}
                     <div className="my-auto flex flex-col items-center justify-center text-center">
                       <span className="font-mono font-black text-8xl sm:text-9xl text-white tracking-tighter drop-shadow-[0_0_35px_rgba(255,255,255,0.45)] mb-3">
                         {member.initialChar}
@@ -135,7 +133,7 @@ export default function MemberCardsModal({ onClose }) {
                     <div className="flex items-center justify-between pt-4 border-t border-neutral-800/80 text-xs font-mono text-neutral-400">
                       <span className="flex items-center gap-1.5 hover:text-white transition-colors">
                         <RotateCw className="w-3.5 h-3.5" />
-                        CLICK TO FLIP
+                        FLIP
                       </span>
                       <span className="text-neutral-500 font-bold">
                         0{index + 1}
@@ -143,7 +141,7 @@ export default function MemberCardsModal({ onClose }) {
                     </div>
                   </div>
 
-                  {/* ================= BACK SIDE (Detailed Story & Info Restored) ================= */}
+                  {/* ================= BACK SIDE ================= */}
                   <div
                     style={{
                       backfaceVisibility: 'hidden',

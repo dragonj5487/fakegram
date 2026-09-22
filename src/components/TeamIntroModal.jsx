@@ -4,9 +4,9 @@ import { teamInfo } from '../data/teamData';
 
 export default function TeamIntroModal({ onClose }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/20 backdrop-blur-[1px] animate-in fade-in duration-300 select-none">
-      {/* Translucent modal box: 3D cubes and JCJ remain clearly visible behind */}
-      <div className="relative w-full max-w-4xl rounded-3xl border border-neutral-700/60 bg-neutral-950/80 backdrop-blur-xl p-6 sm:p-10 shadow-[0_0_80px_rgba(0,0,0,0.85)] flex flex-col max-h-[92vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-transparent animate-in fade-in duration-200 select-none">
+      {/* 90% Dim right under the card, while area outside remains untouched */}
+      <div className="relative w-full max-w-4xl rounded-3xl border border-neutral-800/90 bg-black/90 backdrop-blur-md p-6 sm:p-10 shadow-[0_0_90px_rgba(0,0,0,0.95)] flex flex-col max-h-[92vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-neutral-800/70 pb-5 mb-8">
           <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
@@ -23,7 +23,7 @@ export default function TeamIntroModal({ onClose }) {
         </div>
 
         {/* Slogan Card */}
-        <div className="p-7 sm:p-8 rounded-2xl border border-neutral-800/80 bg-neutral-900/50 shadow-xl mb-8 relative overflow-hidden text-center">
+        <div className="p-7 sm:p-8 rounded-2xl border border-neutral-800/80 bg-neutral-950/60 shadow-xl mb-8 relative overflow-hidden text-center">
           <p className="text-xl sm:text-2xl font-bold text-white leading-relaxed">
             "{teamInfo.slogan}"
           </p>
@@ -36,7 +36,7 @@ export default function TeamIntroModal({ onClose }) {
 
         {/* 3 Pillars */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="p-5 rounded-xl border border-neutral-800/80 bg-neutral-900/40">
+          <div className="p-5 rounded-xl border border-neutral-800/80 bg-neutral-950/50">
             <div className="font-mono text-xs text-neutral-500 font-bold mb-2">01 // SPATIAL</div>
             <h4 className="text-base font-bold text-white mb-1.5">공간 인터랙션</h4>
             <p className="text-xs text-neutral-400 leading-relaxed">
@@ -44,7 +44,7 @@ export default function TeamIntroModal({ onClose }) {
             </p>
           </div>
 
-          <div className="p-5 rounded-xl border border-neutral-800/80 bg-neutral-900/40">
+          <div className="p-5 rounded-xl border border-neutral-800/80 bg-neutral-950/50">
             <div className="font-mono text-xs text-neutral-500 font-bold mb-2">02 // SYNERGY</div>
             <h4 className="text-base font-bold text-white mb-1.5">융합형 시너지</h4>
             <p className="text-xs text-neutral-400 leading-relaxed">
@@ -52,7 +52,7 @@ export default function TeamIntroModal({ onClose }) {
             </p>
           </div>
 
-          <div className="p-5 rounded-xl border border-neutral-800/80 bg-neutral-900/40">
+          <div className="p-5 rounded-xl border border-neutral-800/80 bg-neutral-950/50">
             <div className="font-mono text-xs text-neutral-500 font-bold mb-2">03 // PROTO</div>
             <h4 className="text-base font-bold text-white mb-1.5">실험적 구현</h4>
             <p className="text-xs text-neutral-400 leading-relaxed">

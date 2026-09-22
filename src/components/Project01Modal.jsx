@@ -3,9 +3,9 @@ import { X } from 'lucide-react';
 
 export default function Project01Modal({ onClose }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/20 backdrop-blur-[1px] animate-in fade-in duration-300 select-none">
-      {/* Translucent modal box: 3D cubes and JCJ remain clearly visible behind */}
-      <div className="relative w-full max-w-2xl rounded-3xl border border-neutral-700/60 bg-neutral-950/80 backdrop-blur-xl p-8 sm:p-14 shadow-[0_0_80px_rgba(0,0,0,0.85)] flex flex-col items-center justify-center min-h-[360px]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-transparent animate-in fade-in duration-200 select-none">
+      {/* 90% Dim right under the card, outer screen left clear */}
+      <div className="relative w-full max-w-2xl rounded-3xl border border-neutral-800/90 bg-black/90 backdrop-blur-md p-8 sm:p-14 shadow-[0_0_90px_rgba(0,0,0,0.95)] flex flex-col items-center justify-center min-h-[360px]">
         {/* Close button */}
         <button
           onClick={onClose}

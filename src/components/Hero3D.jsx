@@ -55,7 +55,7 @@ export default function Hero3D() {
       },
     ]);
 
-    // 3 seconds return timer: scales back up, restores opacity to 1, smoothly reassembles
+    // 3 seconds return timer
     if (scatterTimeoutRef.current) clearTimeout(scatterTimeoutRef.current);
     scatterTimeoutRef.current = setTimeout(() => {
       setLetterTransforms([
@@ -99,7 +99,7 @@ export default function Hero3D() {
     pointLight2.position.set(-16, -12, 12);
     scene.add(pointLight2);
 
-    // Floating 3D Cubes
+    // Floating 3D Cubes - ONLY White Wireframe Cubes (Black cubes deleted)
     const cubes = [];
     const numCubes = 18;
     const cubeGroup = new THREE.Group();
@@ -109,32 +109,15 @@ export default function Hero3D() {
       const size = 1.2 + Math.random() * 1.6;
       const geometry = new THREE.BoxGeometry(size, size, size);
 
-      const isWire = i % 2 === 0;
-      const material = isWire
-        ? new THREE.MeshBasicMaterial({
-            color: 0xffffff,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.4 + Math.random() * 0.35,
-          })
-        : new THREE.MeshStandardMaterial({
-            color: 0x181818,
-            roughness: 0.2,
-            metalness: 0.85,
-            transparent: true,
-            opacity: 0.88,
-          });
+      // White wireframe material for all cubes
+      const material = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.35 + Math.random() * 0.45,
+      });
 
       const mesh = new THREE.Mesh(geometry, material);
-
-      if (!isWire) {
-        const edges = new THREE.EdgesGeometry(geometry);
-        const line = new THREE.LineSegments(
-          edges,
-          new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.65 })
-        );
-        mesh.add(line);
-      }
 
       mesh.position.set(
         (Math.random() - 0.5) * 34,
@@ -218,7 +201,7 @@ export default function Hero3D() {
 
           prevMousePos.copy(planeIntersect);
 
-          // REQUIREMENT 2: Trigger scatter ONLY when a dragged cube is brought near JCJ (center)
+          // Trigger scatter ONLY when a dragged cube is brought near JCJ
           const distToCenter = Math.sqrt(
             draggedCube.position.x * draggedCube.position.x +
             draggedCube.position.y * draggedCube.position.y
@@ -300,10 +283,10 @@ export default function Hero3D() {
 
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden select-none">
-      {/* 3D WebGL Background Canvas with draggable floating cubes */}
+      {/* 3D WebGL Background Canvas with draggable floating wireframe cubes */}
       <div ref={mountRef} className="absolute inset-0 z-0 touch-none" />
 
-      {/* Center JCJ: Does NOT scatter on simple mouse hover. Scatters ONLY when a dragged cube approaches */}
+      {/* Center JCJ: Clean and standalone, badge completely removed */}
       <div className="relative z-10 flex flex-col items-center justify-center pointer-events-none">
         <div className="group flex items-center gap-3 sm:gap-7 md:gap-12 p-8">
           {letters.map((char, index) => {
@@ -324,12 +307,6 @@ export default function Hero3D() {
               </span>
             );
           })}
-        </div>
-
-        {/* Minimal clean badge */}
-        <div className="mt-4 flex items-center gap-2 font-mono text-[11px] tracking-widest text-neutral-400 border border-neutral-800/80 bg-neutral-950/70 px-4 py-1.5 rounded-full backdrop-blur-sm pointer-events-auto">
-          <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-          <span>SPATIAL INTERACTION LAB</span>
         </div>
       </div>
     </div>
