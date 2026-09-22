@@ -4,8 +4,9 @@ import { teamInfo } from '../data/teamData';
 
 export default function TeamIntroModal({ onClose }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/50 backdrop-blur-md animate-in fade-in duration-300 select-none">
-      <div className="relative w-full max-w-4xl rounded-3xl border border-neutral-800/80 bg-neutral-950/75 backdrop-blur-xl p-6 sm:p-10 shadow-[0_0_80px_rgba(255,255,255,0.06)] flex flex-col max-h-[92vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/20 backdrop-blur-[1px] animate-in fade-in duration-300 select-none">
+      {/* Translucent modal box: 3D cubes and JCJ remain clearly visible behind */}
+      <div className="relative w-full max-w-4xl rounded-3xl border border-neutral-700/60 bg-neutral-950/80 backdrop-blur-xl p-6 sm:p-10 shadow-[0_0_80px_rgba(0,0,0,0.85)] flex flex-col max-h-[92vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-neutral-800/70 pb-5 mb-8">
           <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
@@ -14,14 +15,14 @@ export default function TeamIntroModal({ onClose }) {
 
           <button
             onClick={onClose}
-            className="p-2.5 rounded-full border border-neutral-700 bg-neutral-900/80 text-neutral-400 hover:text-white hover:border-white transition-all"
+            className="p-2.5 rounded-full border border-neutral-700 bg-neutral-900/80 text-neutral-400 hover:text-white hover:border-white transition-all cursor-pointer"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Slogan Card without CORE SLOGAN label */}
+        {/* Slogan Card */}
         <div className="p-7 sm:p-8 rounded-2xl border border-neutral-800/80 bg-neutral-900/50 shadow-xl mb-8 relative overflow-hidden text-center">
           <p className="text-xl sm:text-2xl font-bold text-white leading-relaxed">
             "{teamInfo.slogan}"

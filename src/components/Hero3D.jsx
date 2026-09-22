@@ -12,11 +12,13 @@ export default function Hero3D() {
     { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1, opacity: 1 },
   ]);
 
+  const isScatteredRef = useRef(false);
   const scatterTimeoutRef = useRef(null);
 
-  // Trigger scatter: shrinks to 0, fades to 0 opacity, flies away into deep space
+  // Trigger scatter: only invoked when a dragged cube approaches JCJ
   const triggerScatter = () => {
-    if (isScattered) return;
+    if (isScatteredRef.current) return;
+    isScatteredRef.current = true;
     setIsScattered(true);
 
     // Vanish into distant space: scale: 0, opacity: 0
@@ -24,7 +26,7 @@ export default function Hero3D() {
       {
         x: (Math.random() - 0.75) * 450,
         y: (Math.random() - 0.5) * 350,
-        z: -600 - Math.random() * 400,
+        z: -650 - Math.random() * 400,
         rotX: (Math.random() - 0.5) * 240,
         rotY: (Math.random() - 0.5) * 300,
         rotZ: (Math.random() - 0.5) * 180,
@@ -34,7 +36,7 @@ export default function Hero3D() {
       {
         x: (Math.random() - 0.5) * 300,
         y: (Math.random() - 0.8) * 450,
-        z: -700 - Math.random() * 400,
+        z: -750 - Math.random() * 400,
         rotX: (Math.random() - 0.5) * 300,
         rotY: (Math.random() - 0.5) * 250,
         rotZ: (Math.random() - 0.5) * 220,
@@ -44,7 +46,7 @@ export default function Hero3D() {
       {
         x: (Math.random() - 0.25) * 450,
         y: (Math.random() - 0.5) * 350,
-        z: -600 - Math.random() * 400,
+        z: -650 - Math.random() * 400,
         rotX: (Math.random() - 0.5) * 260,
         rotY: (Math.random() - 0.5) * 280,
         rotZ: (Math.random() - 0.5) * 200,
@@ -62,6 +64,7 @@ export default function Hero3D() {
         { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1, opacity: 1 },
       ]);
       setIsScattered(false);
+      isScatteredRef.current = false;
     }, 3000);
   };
 
@@ -85,20 +88,20 @@ export default function Hero3D() {
     mount.appendChild(renderer.domElement);
 
     // Monochrome Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
     scene.add(ambientLight);
 
-    const pointLight = new THREE.PointLight(0xffffff, 2.0, 60);
+    const pointLight = new THREE.PointLight(0xffffff, 2.2, 60);
     pointLight.position.set(12, 16, 16);
     scene.add(pointLight);
 
-    const pointLight2 = new THREE.PointLight(0x777777, 1.2, 60);
+    const pointLight2 = new THREE.PointLight(0x777777, 1.4, 60);
     pointLight2.position.set(-16, -12, 12);
     scene.add(pointLight2);
 
     // Floating 3D Cubes
     const cubes = [];
-    const numCubes = 16;
+    const numCubes = 18;
     const cubeGroup = new THREE.Group();
     scene.add(cubeGroup);
 
@@ -112,14 +115,14 @@ export default function Hero3D() {
             color: 0xffffff,
             wireframe: true,
             transparent: true,
-            opacity: 0.35 + Math.random() * 0.35,
+            opacity: 0.4 + Math.random() * 0.35,
           })
         : new THREE.MeshStandardMaterial({
-            color: 0x141414,
-            roughness: 0.25,
-            metalness: 0.8,
+            color: 0x181818,
+            roughness: 0.2,
+            metalness: 0.85,
             transparent: true,
-            opacity: 0.85,
+            opacity: 0.88,
           });
 
       const mesh = new THREE.Mesh(geometry, material);
@@ -128,14 +131,14 @@ export default function Hero3D() {
         const edges = new THREE.EdgesGeometry(geometry);
         const line = new THREE.LineSegments(
           edges,
-          new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 })
+          new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.65 })
         );
         mesh.add(line);
       }
 
       mesh.position.set(
-        (Math.random() - 0.5) * 32,
-        (Math.random() - 0.5) * 18,
+        (Math.random() - 0.5) * 34,
+        (Math.random() - 0.5) * 19,
         (Math.random() - 0.5) * 12
       );
 
@@ -152,7 +155,7 @@ export default function Hero3D() {
       cubeGroup.add(mesh);
     }
 
-    // Raycaster & Mouse Dragging for Cubes (Item 1)
+    // Raycaster & Mouse Dragging for Cubes
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2(-999, -999);
     const dragPlane = new THREE.Plane();
@@ -171,7 +174,7 @@ export default function Hero3D() {
     };
 
     const onPointerDown = (e) => {
-      if (e.button !== 0) return; // only left click
+      if (e.button !== 0) return;
       const ndc = getMouseNDC(e);
       mouse.x = ndc.x;
       mouse.y = ndc.y;
@@ -183,7 +186,6 @@ export default function Hero3D() {
         draggedCube = intersects[0].object;
         isDraggingCube = true;
 
-        // Plane perpendicular to camera at the cube's position
         dragPlane.setFromNormalAndCoplanarPoint(
           camera.getWorldDirection(new THREE.Vector3()).negate(),
           draggedCube.position
@@ -202,7 +204,6 @@ export default function Hero3D() {
       if (isDraggingCube && draggedCube) {
         raycaster.setFromCamera(mouse, camera);
         if (raycaster.ray.intersectPlane(dragPlane, planeIntersect)) {
-          // Calculate momentum
           const deltaX = planeIntersect.x - prevMousePos.x;
           const deltaY = planeIntersect.y - prevMousePos.y;
           const deltaZ = planeIntersect.z - prevMousePos.z;
@@ -216,9 +217,17 @@ export default function Hero3D() {
           draggedCube.userData.rotVy = deltaX * 0.2;
 
           prevMousePos.copy(planeIntersect);
+
+          // REQUIREMENT 2: Trigger scatter ONLY when a dragged cube is brought near JCJ (center)
+          const distToCenter = Math.sqrt(
+            draggedCube.position.x * draggedCube.position.x +
+            draggedCube.position.y * draggedCube.position.y
+          );
+          if (distToCenter < 6.8) {
+            triggerScatter();
+          }
         }
       } else {
-        // Hover cursor check
         raycaster.setFromCamera(mouse, camera);
         const hits = raycaster.intersectObjects(cubes);
         mount.style.cursor = hits.length > 0 ? 'grab' : 'default';
@@ -259,14 +268,12 @@ export default function Hero3D() {
           cube.rotation.x += cube.userData.rotVx;
           cube.rotation.y += cube.userData.rotVy;
 
-          // Bounce off bounds
           if (Math.abs(cube.position.x) > 18) cube.userData.vx *= -1;
           if (Math.abs(cube.position.y) > 11) cube.userData.vy *= -1;
           if (Math.abs(cube.position.z) > 9) cube.userData.vz *= -1;
         }
       });
 
-      // Camera parallax
       camera.position.x += (mouse.x * 2.5 - camera.position.x) * 0.05;
       camera.position.y += (mouse.y * 1.8 - camera.position.y) * 0.05;
       camera.lookAt(0, 0, 0);
@@ -296,12 +303,9 @@ export default function Hero3D() {
       {/* 3D WebGL Background Canvas with draggable floating cubes */}
       <div ref={mountRef} className="absolute inset-0 z-0 touch-none" />
 
-      {/* Center JCJ: Scatters, vanishes to 0 scale/opacity, and returns over 3 seconds */}
+      {/* Center JCJ: Does NOT scatter on simple mouse hover. Scatters ONLY when a dragged cube approaches */}
       <div className="relative z-10 flex flex-col items-center justify-center pointer-events-none">
-        <div
-          onMouseEnter={triggerScatter}
-          className="group flex items-center gap-3 sm:gap-7 md:gap-12 cursor-pointer p-8 pointer-events-auto"
-        >
+        <div className="group flex items-center gap-3 sm:gap-7 md:gap-12 p-8">
           {letters.map((char, index) => {
             const transform = letterTransforms[index];
             return (
@@ -314,7 +318,7 @@ export default function Hero3D() {
                     ? 'transform 0.85s cubic-bezier(0.2, 0.9, 0.2, 1), opacity 0.75s ease-out'
                     : 'transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease-in',
                 }}
-                className="inline-block font-black text-8xl sm:text-9xl md:text-[12rem] tracking-tight text-white select-none drop-shadow-[0_0_40px_rgba(255,255,255,0.35)] group-hover:text-neutral-200 group-hover:drop-shadow-[0_0_60px_rgba(255,255,255,0.6)]"
+                className="inline-block font-black text-8xl sm:text-9xl md:text-[12rem] tracking-tight text-white select-none drop-shadow-[0_0_40px_rgba(255,255,255,0.35)]"
               >
                 {char}
               </span>

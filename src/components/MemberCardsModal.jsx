@@ -6,11 +6,10 @@ export default function MemberCardsModal({ onClose }) {
   const [members, setMembers] = useState(initialMembers);
   const [flippedMap, setFlippedMap] = useState({});
   const [draggedIndex, setDraggedIndex] = useState(null);
-  const [isShaking, setIsShaking] = useState(false);
   const [imgErrorMap, setImgErrorMap] = useState({});
 
   const dragStartPos = useRef({ x: 0, y: 0 });
-  const hasDragged = useRef(false);
+  const isDragging = useRef(false);
 
   const toggleFlip = (id) => {
     setFlippedMap((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -20,11 +19,10 @@ export default function MemberCardsModal({ onClose }) {
     setImgErrorMap((prev) => ({ ...prev, [id]: true }));
   };
 
-  // Drag & Reorder
+  // Drag & Reorder Handlers
   const handleDragStart = (e, index) => {
     setDraggedIndex(index);
-    setIsShaking(true);
-    hasDragged.current = true;
+    isDragging.current = true;
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', index);
   };
@@ -42,28 +40,30 @@ export default function MemberCardsModal({ onClose }) {
 
   const handleDragEnd = () => {
     setDraggedIndex(null);
-    setIsShaking(false);
     setTimeout(() => {
-      hasDragged.current = false;
-    }, 100);
+      isDragging.current = false;
+    }, 150);
   };
 
   const handleMouseDown = (e) => {
     dragStartPos.current = { x: e.clientX, y: e.clientY };
-    hasDragged.current = false;
+    isDragging.current = false;
   };
 
-  const handleCardClick = (id) => {
-    if (!hasDragged.current) {
+  const handleMouseUp = (e, id) => {
+    const dx = Math.abs(e.clientX - dragStartPos.current.x);
+    const dy = Math.abs(e.clientY - dragStartPos.current.y);
+    // If movement is very small, it's a click -> flip the card!
+    if (dx < 6 && dy < 6 && !isDragging.current) {
       toggleFlip(id);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/50 backdrop-blur-md animate-in fade-in duration-300 select-none">
-      {/* Container Card with translucent backdrop */}
-      <div className="relative w-full max-w-5xl rounded-3xl border border-neutral-800/80 bg-neutral-950/75 backdrop-blur-xl p-6 sm:p-10 shadow-[0_0_80px_rgba(255,255,255,0.06)] flex flex-col max-h-[92vh] overflow-y-auto">
-        {/* Header - Deleted TEAM MEMBERS // INTERACTIVE CARDS */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/20 backdrop-blur-[1px] animate-in fade-in duration-300 select-none">
+      {/* Translucent modal box: Background 3D cubes and JCJ remain clearly visible */}
+      <div className="relative w-full max-w-5xl rounded-3xl border border-neutral-700/60 bg-neutral-950/80 backdrop-blur-xl p-6 sm:p-10 shadow-[0_0_80px_rgba(0,0,0,0.85)] flex flex-col max-h-[92vh] overflow-y-auto">
+        {/* Header */}
         <div className="flex items-center justify-between border-b border-neutral-800/70 pb-5 mb-8">
           <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
             팀원 소개
@@ -71,7 +71,7 @@ export default function MemberCardsModal({ onClose }) {
 
           <button
             onClick={onClose}
-            className="p-2.5 rounded-full border border-neutral-700 bg-neutral-900/80 text-neutral-400 hover:text-white hover:border-white transition-all"
+            className="p-2.5 rounded-full border border-neutral-700 bg-neutral-900/80 text-neutral-400 hover:text-white hover:border-white transition-all cursor-pointer"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
@@ -92,22 +92,22 @@ export default function MemberCardsModal({ onClose }) {
                 onDragOver={(e) => handleDragOver(e, index)}
                 onDragEnd={handleDragEnd}
                 onMouseDown={handleMouseDown}
-                onClick={() => handleCardClick(member.id)}
+                onMouseUp={(e) => handleMouseUp(e, member.id)}
                 style={{ perspective: '1200px' }}
-                className={`relative h-[440px] cursor-grab active:cursor-grabbing transition-transform duration-300 ${
+                className={`relative h-[450px] cursor-grab active:cursor-grabbing transition-transform duration-300 ${
                   isBeingDragged
                     ? 'scale-105 rotate-2 opacity-80 shadow-[0_0_40px_rgba(255,255,255,0.3)] animate-pulse'
                     : 'hover:-translate-y-2'
                 }`}
               >
-                {/* 3D Flip Container */}
+                {/* 3D Flip Container (NO background on this container to preserve 3D children) */}
                 <div
                   style={{
                     transformStyle: 'preserve-3d',
                     transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
                     transition: 'transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1)',
                   }}
-                  className="relative w-full h-full rounded-2xl border border-neutral-800/90 bg-neutral-900/70 backdrop-blur-md shadow-2xl"
+                  className="relative w-full h-full"
                 >
                   {/* ================= FRONT SIDE ================= */}
                   <div
@@ -115,60 +115,58 @@ export default function MemberCardsModal({ onClose }) {
                       backfaceVisibility: 'hidden',
                       WebkitBackfaceVisibility: 'hidden',
                     }}
-                    className="absolute inset-0 rounded-2xl p-7 flex flex-col justify-between border border-neutral-800/60 bg-gradient-to-b from-neutral-900/80 via-neutral-950/80 to-black/90 overflow-hidden"
+                    className="absolute inset-0 rounded-2xl p-7 flex flex-col justify-between border border-neutral-700/80 bg-gradient-to-b from-neutral-900/90 via-neutral-950/95 to-black shadow-2xl overflow-hidden cursor-pointer"
                   >
-                    {/* Top spacer (NODE and GripVertical deleted) */}
+                    {/* Top spacer */}
                     <div className="h-4" />
 
                     {/* Center: J, C, J huge without border, and JEON, JUNG, CHOI smaller */}
                     <div className="my-auto flex flex-col items-center justify-center text-center">
-                      {/* Huge J, C, J without border */}
-                      <span className="font-mono font-black text-7xl sm:text-8xl md:text-9xl text-white tracking-tighter drop-shadow-[0_0_35px_rgba(255,255,255,0.4)] mb-2">
+                      <span className="font-mono font-black text-8xl sm:text-9xl text-white tracking-tighter drop-shadow-[0_0_35px_rgba(255,255,255,0.45)] mb-3">
                         {member.initialChar}
                       </span>
 
-                      {/* Smaller surname (JUNG, CHOI, JEON) */}
-                      <span className="font-mono font-bold text-lg sm:text-xl text-neutral-400 tracking-widest uppercase">
+                      <span className="font-mono font-bold text-xl sm:text-2xl text-neutral-300 tracking-widest uppercase">
                         {member.code}
                       </span>
                     </div>
 
                     {/* Bottom Flip Indicator */}
-                    <div className="flex items-center justify-between pt-4 border-t border-neutral-800/60 text-[11px] font-mono text-neutral-500">
-                      <span className="flex items-center gap-1.5 hover:text-neutral-300 transition-colors">
-                        <RotateCw className="w-3 h-3" />
-                        FLIP
+                    <div className="flex items-center justify-between pt-4 border-t border-neutral-800/80 text-xs font-mono text-neutral-400">
+                      <span className="flex items-center gap-1.5 hover:text-white transition-colors">
+                        <RotateCw className="w-3.5 h-3.5" />
+                        CLICK TO FLIP
                       </span>
-                      <span className="text-neutral-600 font-bold">
+                      <span className="text-neutral-500 font-bold">
                         0{index + 1}
                       </span>
                     </div>
                   </div>
 
-                  {/* ================= BACK SIDE ================= */}
+                  {/* ================= BACK SIDE (Detailed Story & Info Restored) ================= */}
                   <div
                     style={{
                       backfaceVisibility: 'hidden',
                       WebkitBackfaceVisibility: 'hidden',
                       transform: 'rotateY(180deg)',
                     }}
-                    className="absolute inset-0 rounded-2xl p-6 flex flex-col justify-between border border-neutral-700/80 bg-neutral-950/90 backdrop-blur-md overflow-hidden"
+                    className="absolute inset-0 rounded-2xl p-6 flex flex-col justify-between border border-neutral-600/90 bg-neutral-950 shadow-2xl overflow-hidden cursor-pointer"
                   >
                     <div>
                       {/* Back Header */}
                       <div className="flex items-center justify-between border-b border-neutral-800 pb-3 mb-4">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-bold text-black bg-white px-2 py-0.5 rounded">
+                          <span className="font-mono text-xs font-bold text-black bg-white px-2.5 py-0.5 rounded">
                             {member.code}
                           </span>
-                          <span className="font-mono text-xs text-neutral-400">
+                          <span className="font-mono text-xs text-neutral-300 font-semibold">
                             {member.studentId}
                           </span>
                         </div>
-                        <RotateCw className="w-3.5 h-3.5 text-neutral-500 hover:text-white" />
+                        <RotateCw className="w-4 h-4 text-neutral-400 hover:text-white" />
                       </div>
 
-                      {/* Photo & Name (Deleted /images~ filepath) */}
+                      {/* Photo & Name */}
                       <div className="flex items-center gap-3.5 mb-4">
                         <div className="w-14 h-14 rounded-xl border border-neutral-700 bg-neutral-900 overflow-hidden flex-shrink-0 flex items-center justify-center">
                           {!imgErrorMap[member.id] ? (
@@ -190,31 +188,34 @@ export default function MemberCardsModal({ onClose }) {
                           )}
                         </div>
                         <div>
-                          <h5 className="font-extrabold text-xl text-white">
+                          <h5 className="font-black text-2xl text-white">
                             {member.name}
                           </h5>
+                          <span className="font-mono text-xs text-neutral-400">
+                            {member.studentId}
+                          </span>
                         </div>
                       </div>
 
-                      {/* Summary Box */}
-                      <div className="p-3.5 rounded-xl border border-neutral-800 bg-neutral-900/70 text-xs text-neutral-300 leading-relaxed break-keep mb-3">
+                      {/* Personal Story & Introduction */}
+                      <div className="p-4 rounded-xl border border-neutral-800 bg-neutral-900/80 text-sm text-neutral-200 leading-relaxed break-keep mb-3">
                         {member.summary}
                       </div>
                     </div>
 
-                    {/* Bottom Tags & Close Hint (Deleted right initialChar) */}
+                    {/* Bottom Tags & Close Hint */}
                     <div>
-                      <div className="flex flex-wrap gap-1 mb-2">
-                        {member.tags.slice(0, 3).map((tag, tIdx) => (
+                      <div className="flex flex-wrap gap-1.5 mb-2">
+                        {member.tags.map((tag, tIdx) => (
                           <span
                             key={tIdx}
-                            className="text-[10px] font-mono px-2 py-0.5 rounded bg-neutral-900 text-neutral-400 border border-neutral-800"
+                            className="text-[11px] font-mono px-2.5 py-0.5 rounded bg-neutral-900 text-neutral-300 border border-neutral-800"
                           >
                             #{tag}
                           </span>
                         ))}
                       </div>
-                      <div className="pt-2 border-t border-neutral-900 text-[10px] font-mono text-neutral-500 flex justify-between">
+                      <div className="pt-2.5 border-t border-neutral-900 text-xs font-mono text-neutral-400 flex justify-between">
                         <span>다시 클릭하면 닫힙니다</span>
                       </div>
                     </div>
