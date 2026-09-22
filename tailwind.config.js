@@ -8,24 +8,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        jade: {
-          50: '#f0fdfa',
-          100: '#ccfbf1',
-          200: '#99f6e4',
-          300: '#5eead4',
-          400: '#2dd4bf',
-          500: '#14b8a6',
-          600: '#0d9488',
-          700: '#0f766e',
-          800: '#115e59',
-          900: '#134e4a',
-          950: '#042f2e',
-        },
-        dark: {
-          bg: '#0A0E17',
-          surface: '#111827',
-          card: '#161F30',
-          border: '#1F2E45',
+        mono: {
+          50: '#F9FAFB',
+          100: '#F3F4F6',
+          200: '#E5E7EB',
+          300: '#D1D5DB',
+          400: '#9CA3AF',
+          500: '#6B7280',
+          600: '#4B5563',
+          700: '#374151',
+          800: '#1F2937',
+          900: '#111827',
+          950: '#080C14',
+          black: '#000000',
         }
       },
       fontFamily: {
@@ -35,12 +30,15 @@ export default {
           'BlinkMacSystemFont',
           'system-ui',
           'Roboto',
-          'Helvetica Neue',
-          'Segoe UI',
-          'Apple SD Gothic Neo',
-          'Noto Sans KR',
-          'Malgun Gothic',
           'sans-serif'
+        ],
+        mono: [
+          'JetBrains Mono',
+          'SFMono-Regular',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          'monospace'
         ]
       }
     },
