@@ -5,58 +5,61 @@ export default function Hero3D() {
   const mountRef = useRef(null);
   const [isScattered, setIsScattered] = useState(false);
 
-  // Letter transforms for J, C, J
+  // Letter transforms for J, C, J with scale & opacity for vanishing/reappearing effect
   const [letterTransforms, setLetterTransforms] = useState([
-    { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1 },
-    { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1 },
-    { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1 },
+    { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1, opacity: 1 },
+    { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1, opacity: 1 },
+    { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1, opacity: 1 },
   ]);
 
   const scatterTimeoutRef = useRef(null);
 
-  // Trigger scatter only on mouse hover (onMouseEnter)
+  // Trigger scatter: shrinks to 0, fades to 0 opacity, flies away into deep space
   const triggerScatter = () => {
     if (isScattered) return;
     setIsScattered(true);
 
-    // Random explosive scatter vector for each of the 3 letters
+    // Vanish into distant space: scale: 0, opacity: 0
     setLetterTransforms([
       {
-        x: (Math.random() - 0.75) * 340,
-        y: (Math.random() - 0.5) * 260,
-        z: Math.random() * 260,
-        rotX: (Math.random() - 0.5) * 150,
-        rotY: (Math.random() - 0.5) * 220,
-        rotZ: (Math.random() - 0.5) * 110,
-        scale: 0.7 + Math.random() * 0.4,
+        x: (Math.random() - 0.75) * 450,
+        y: (Math.random() - 0.5) * 350,
+        z: -600 - Math.random() * 400,
+        rotX: (Math.random() - 0.5) * 240,
+        rotY: (Math.random() - 0.5) * 300,
+        rotZ: (Math.random() - 0.5) * 180,
+        scale: 0.05,
+        opacity: 0,
       },
       {
-        x: (Math.random() - 0.5) * 220,
-        y: (Math.random() - 0.8) * 320,
-        z: Math.random() * 280,
-        rotX: (Math.random() - 0.5) * 220,
-        rotY: (Math.random() - 0.5) * 180,
-        rotZ: (Math.random() - 0.5) * 150,
-        scale: 0.6 + Math.random() * 0.5,
+        x: (Math.random() - 0.5) * 300,
+        y: (Math.random() - 0.8) * 450,
+        z: -700 - Math.random() * 400,
+        rotX: (Math.random() - 0.5) * 300,
+        rotY: (Math.random() - 0.5) * 250,
+        rotZ: (Math.random() - 0.5) * 220,
+        scale: 0.05,
+        opacity: 0,
       },
       {
-        x: (Math.random() - 0.25) * 360,
-        y: (Math.random() - 0.5) * 280,
-        z: Math.random() * 250,
-        rotX: (Math.random() - 0.5) * 180,
-        rotY: (Math.random() - 0.5) * 200,
-        rotZ: (Math.random() - 0.5) * 130,
-        scale: 0.7 + Math.random() * 0.4,
+        x: (Math.random() - 0.25) * 450,
+        y: (Math.random() - 0.5) * 350,
+        z: -600 - Math.random() * 400,
+        rotX: (Math.random() - 0.5) * 260,
+        rotY: (Math.random() - 0.5) * 280,
+        rotZ: (Math.random() - 0.5) * 200,
+        scale: 0.05,
+        opacity: 0,
       },
     ]);
 
-    // 3 seconds return timer (returns smoothly to original position)
+    // 3 seconds return timer: scales back up, restores opacity to 1, smoothly reassembles
     if (scatterTimeoutRef.current) clearTimeout(scatterTimeoutRef.current);
     scatterTimeoutRef.current = setTimeout(() => {
       setLetterTransforms([
-        { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1 },
-        { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1 },
-        { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1 },
+        { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1, opacity: 1 },
+        { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1, opacity: 1 },
+        { x: 0, y: 0, z: 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1, opacity: 1 },
       ]);
       setIsScattered(false);
     }, 3000);
@@ -82,25 +85,25 @@ export default function Hero3D() {
     mount.appendChild(renderer.domElement);
 
     // Monochrome Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.75);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
     scene.add(ambientLight);
 
-    const pointLight = new THREE.PointLight(0xffffff, 1.8, 60);
+    const pointLight = new THREE.PointLight(0xffffff, 2.0, 60);
     pointLight.position.set(12, 16, 16);
     scene.add(pointLight);
 
-    const pointLight2 = new THREE.PointLight(0x666666, 1.2, 60);
+    const pointLight2 = new THREE.PointLight(0x777777, 1.2, 60);
     pointLight2.position.set(-16, -12, 12);
     scene.add(pointLight2);
 
-    // Floating 3D Cubes (drifting around smoothly)
+    // Floating 3D Cubes
     const cubes = [];
     const numCubes = 16;
     const cubeGroup = new THREE.Group();
     scene.add(cubeGroup);
 
     for (let i = 0; i < numCubes; i++) {
-      const size = 1.1 + Math.random() * 1.7;
+      const size = 1.2 + Math.random() * 1.6;
       const geometry = new THREE.BoxGeometry(size, size, size);
 
       const isWire = i % 2 === 0;
@@ -109,7 +112,7 @@ export default function Hero3D() {
             color: 0xffffff,
             wireframe: true,
             transparent: true,
-            opacity: 0.3 + Math.random() * 0.35,
+            opacity: 0.35 + Math.random() * 0.35,
           })
         : new THREE.MeshStandardMaterial({
             color: 0x141414,
@@ -125,15 +128,15 @@ export default function Hero3D() {
         const edges = new THREE.EdgesGeometry(geometry);
         const line = new THREE.LineSegments(
           edges,
-          new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.55 })
+          new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 })
         );
         mesh.add(line);
       }
 
       mesh.position.set(
-        (Math.random() - 0.5) * 34,
-        (Math.random() - 0.5) * 20,
-        (Math.random() - 0.5) * 14
+        (Math.random() - 0.5) * 32,
+        (Math.random() - 0.5) * 18,
+        (Math.random() - 0.5) * 12
       );
 
       const speed = 0.012 + Math.random() * 0.018;
@@ -149,14 +152,90 @@ export default function Hero3D() {
       cubeGroup.add(mesh);
     }
 
-    // Subtle mouse parallax
-    const mouse = new THREE.Vector2(0, 0);
-    const onMouseMove = (e) => {
+    // Raycaster & Mouse Dragging for Cubes (Item 1)
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2(-999, -999);
+    const dragPlane = new THREE.Plane();
+    const planeIntersect = new THREE.Vector3();
+
+    let draggedCube = null;
+    let prevMousePos = new THREE.Vector3();
+    let isDraggingCube = false;
+
+    const getMouseNDC = (e) => {
       const rect = mount.getBoundingClientRect();
-      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      return {
+        x: ((e.clientX - rect.left) / rect.width) * 2 - 1,
+        y: -((e.clientY - rect.top) / rect.height) * 2 + 1,
+      };
     };
-    window.addEventListener('mousemove', onMouseMove);
+
+    const onPointerDown = (e) => {
+      if (e.button !== 0) return; // only left click
+      const ndc = getMouseNDC(e);
+      mouse.x = ndc.x;
+      mouse.y = ndc.y;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(cubes);
+
+      if (intersects.length > 0) {
+        draggedCube = intersects[0].object;
+        isDraggingCube = true;
+
+        // Plane perpendicular to camera at the cube's position
+        dragPlane.setFromNormalAndCoplanarPoint(
+          camera.getWorldDirection(new THREE.Vector3()).negate(),
+          draggedCube.position
+        );
+
+        prevMousePos.copy(intersects[0].point);
+        mount.style.cursor = 'grabbing';
+      }
+    };
+
+    const onPointerMove = (e) => {
+      const ndc = getMouseNDC(e);
+      mouse.x = ndc.x;
+      mouse.y = ndc.y;
+
+      if (isDraggingCube && draggedCube) {
+        raycaster.setFromCamera(mouse, camera);
+        if (raycaster.ray.intersectPlane(dragPlane, planeIntersect)) {
+          // Calculate momentum
+          const deltaX = planeIntersect.x - prevMousePos.x;
+          const deltaY = planeIntersect.y - prevMousePos.y;
+          const deltaZ = planeIntersect.z - prevMousePos.z;
+
+          draggedCube.position.copy(planeIntersect);
+          draggedCube.userData.vx = deltaX * 0.4;
+          draggedCube.userData.vy = deltaY * 0.4;
+          draggedCube.userData.vz = deltaZ * 0.4;
+
+          draggedCube.userData.rotVx = deltaY * 0.2;
+          draggedCube.userData.rotVy = deltaX * 0.2;
+
+          prevMousePos.copy(planeIntersect);
+        }
+      } else {
+        // Hover cursor check
+        raycaster.setFromCamera(mouse, camera);
+        const hits = raycaster.intersectObjects(cubes);
+        mount.style.cursor = hits.length > 0 ? 'grab' : 'default';
+      }
+    };
+
+    const onPointerUp = () => {
+      if (isDraggingCube) {
+        isDraggingCube = false;
+        draggedCube = null;
+        mount.style.cursor = 'default';
+      }
+    };
+
+    mount.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
 
     const onResize = () => {
       if (!mount) return;
@@ -172,18 +251,22 @@ export default function Hero3D() {
       animationId = requestAnimationFrame(animate);
 
       cubes.forEach((cube) => {
-        cube.position.x += cube.userData.vx;
-        cube.position.y += cube.userData.vy;
-        cube.position.z += cube.userData.vz;
+        if (cube !== draggedCube) {
+          cube.position.x += cube.userData.vx;
+          cube.position.y += cube.userData.vy;
+          cube.position.z += cube.userData.vz;
 
-        cube.rotation.x += cube.userData.rotVx;
-        cube.rotation.y += cube.userData.rotVy;
+          cube.rotation.x += cube.userData.rotVx;
+          cube.rotation.y += cube.userData.rotVy;
 
-        if (Math.abs(cube.position.x) > 18) cube.userData.vx *= -1;
-        if (Math.abs(cube.position.y) > 11) cube.userData.vy *= -1;
-        if (Math.abs(cube.position.z) > 9) cube.userData.vz *= -1;
+          // Bounce off bounds
+          if (Math.abs(cube.position.x) > 18) cube.userData.vx *= -1;
+          if (Math.abs(cube.position.y) > 11) cube.userData.vy *= -1;
+          if (Math.abs(cube.position.z) > 9) cube.userData.vz *= -1;
+        }
       });
 
+      // Camera parallax
       camera.position.x += (mouse.x * 2.5 - camera.position.x) * 0.05;
       camera.position.y += (mouse.y * 1.8 - camera.position.y) * 0.05;
       camera.lookAt(0, 0, 0);
@@ -195,7 +278,9 @@ export default function Hero3D() {
 
     return () => {
       cancelAnimationFrame(animationId);
-      window.removeEventListener('mousemove', onMouseMove);
+      mount.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('resize', onResize);
       if (mount && renderer.domElement) {
         mount.removeChild(renderer.domElement);
@@ -208,14 +293,14 @@ export default function Hero3D() {
 
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden select-none">
-      {/* 3D WebGL Background Canvas with floating cubes */}
-      <div ref={mountRef} className="absolute inset-0 z-0 pointer-events-none" />
+      {/* 3D WebGL Background Canvas with draggable floating cubes */}
+      <div ref={mountRef} className="absolute inset-0 z-0 touch-none" />
 
-      {/* Center JCJ: Scatters on mouse hover (onMouseEnter) */}
-      <div className="relative z-10 flex flex-col items-center justify-center">
+      {/* Center JCJ: Scatters, vanishes to 0 scale/opacity, and returns over 3 seconds */}
+      <div className="relative z-10 flex flex-col items-center justify-center pointer-events-none">
         <div
           onMouseEnter={triggerScatter}
-          className="group flex items-center gap-3 sm:gap-7 md:gap-12 cursor-pointer p-8"
+          className="group flex items-center gap-3 sm:gap-7 md:gap-12 cursor-pointer p-8 pointer-events-auto"
         >
           {letters.map((char, index) => {
             const transform = letterTransforms[index];
@@ -224,15 +309,12 @@ export default function Hero3D() {
                 key={index}
                 style={{
                   transform: `translate3d(${transform.x}px, ${transform.y}px, ${transform.z}px) rotateX(${transform.rotX}deg) rotateY(${transform.rotY}deg) rotateZ(${transform.rotZ}deg) scale(${transform.scale})`,
+                  opacity: transform.opacity,
                   transition: isScattered
-                    ? 'transform 0.45s cubic-bezier(0.12, 1, 0.28, 1)'
-                    : 'transform 2.5s cubic-bezier(0.18, 0.85, 0.2, 1)',
+                    ? 'transform 0.85s cubic-bezier(0.2, 0.9, 0.2, 1), opacity 0.75s ease-out'
+                    : 'transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease-in',
                 }}
-                className={`inline-block font-black text-8xl sm:text-9xl md:text-[12rem] tracking-tight text-white select-none transition-colors duration-300 ${
-                  isScattered
-                    ? 'text-neutral-400 drop-shadow-[0_0_35px_rgba(255,255,255,0.7)]'
-                    : 'drop-shadow-[0_0_40px_rgba(255,255,255,0.35)] group-hover:text-neutral-200 group-hover:drop-shadow-[0_0_60px_rgba(255,255,255,0.6)]'
-                }`}
+                className="inline-block font-black text-8xl sm:text-9xl md:text-[12rem] tracking-tight text-white select-none drop-shadow-[0_0_40px_rgba(255,255,255,0.35)] group-hover:text-neutral-200 group-hover:drop-shadow-[0_0_60px_rgba(255,255,255,0.6)]"
               >
                 {char}
               </span>
@@ -241,7 +323,7 @@ export default function Hero3D() {
         </div>
 
         {/* Minimal clean badge */}
-        <div className="mt-4 flex items-center gap-2 font-mono text-[11px] tracking-widest text-neutral-400 border border-neutral-800/80 bg-neutral-950/70 px-4 py-1.5 rounded-full backdrop-blur-sm">
+        <div className="mt-4 flex items-center gap-2 font-mono text-[11px] tracking-widest text-neutral-400 border border-neutral-800/80 bg-neutral-950/70 px-4 py-1.5 rounded-full backdrop-blur-sm pointer-events-auto">
           <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
           <span>SPATIAL INTERACTION LAB</span>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { X, GripVertical, Image as ImageIcon, Sparkles, RotateCw } from 'lucide-react';
+import { X, RotateCw } from 'lucide-react';
 import { teamMembers as initialMembers } from '../data/teamData';
 
 export default function MemberCardsModal({ onClose }) {
@@ -9,7 +9,6 @@ export default function MemberCardsModal({ onClose }) {
   const [isShaking, setIsShaking] = useState(false);
   const [imgErrorMap, setImgErrorMap] = useState({});
 
-  // Mouse tracking to distinguish click (flip) from drag (reorder)
   const dragStartPos = useRef({ x: 0, y: 0 });
   const hasDragged = useRef(false);
 
@@ -21,13 +20,12 @@ export default function MemberCardsModal({ onClose }) {
     setImgErrorMap((prev) => ({ ...prev, [id]: true }));
   };
 
-  // Drag & Reorder Handlers
+  // Drag & Reorder
   const handleDragStart = (e, index) => {
     setDraggedIndex(index);
     setIsShaking(true);
     hasDragged.current = true;
     e.dataTransfer.effectAllowed = 'move';
-    // Set ghost drag data
     e.dataTransfer.setData('text/plain', index);
   };
 
@@ -35,7 +33,6 @@ export default function MemberCardsModal({ onClose }) {
     e.preventDefault();
     if (draggedIndex === null || draggedIndex === index) return;
 
-    // Swap positions dynamically
     const updated = [...members];
     const item = updated.splice(draggedIndex, 1)[0];
     updated.splice(index, 0, item);
@@ -63,34 +60,22 @@ export default function MemberCardsModal({ onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-xl animate-in fade-in duration-300 select-none">
-      {/* Container Card */}
-      <div className="relative w-full max-w-5xl rounded-3xl border border-neutral-800 bg-neutral-950/95 p-6 sm:p-10 shadow-[0_0_80px_rgba(255,255,255,0.08)] flex flex-col max-h-[92vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-neutral-800 pb-5 mb-8">
-          <div>
-            <div className="flex items-center gap-2 font-mono text-xs text-neutral-400 mb-1">
-              <Sparkles className="w-3.5 h-3.5 text-white" />
-              <span>TEAM MEMBERS // INTERACTIVE CARDS</span>
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              팀원 소개
-            </h3>
-          </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/50 backdrop-blur-md animate-in fade-in duration-300 select-none">
+      {/* Container Card with translucent backdrop */}
+      <div className="relative w-full max-w-5xl rounded-3xl border border-neutral-800/80 bg-neutral-950/75 backdrop-blur-xl p-6 sm:p-10 shadow-[0_0_80px_rgba(255,255,255,0.06)] flex flex-col max-h-[92vh] overflow-y-auto">
+        {/* Header - Deleted TEAM MEMBERS // INTERACTIVE CARDS */}
+        <div className="flex items-center justify-between border-b border-neutral-800/70 pb-5 mb-8">
+          <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            팀원 소개
+          </h3>
 
           <button
             onClick={onClose}
-            className="p-2.5 rounded-full border border-neutral-700 bg-neutral-900 text-neutral-400 hover:text-white hover:border-white transition-all"
+            className="p-2.5 rounded-full border border-neutral-700 bg-neutral-900/80 text-neutral-400 hover:text-white hover:border-white transition-all"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
           </button>
-        </div>
-
-        {/* Guidance badge */}
-        <div className="flex flex-wrap items-center justify-between gap-2 mb-6 px-1 text-xs font-mono text-neutral-400">
-          <span>• 카드를 클릭하면 뒤집혀 상세 소개가 나타납니다</span>
-          <span>• 마우스 좌클릭으로 끌고 흔들어 순서를 바꿀 수 있습니다</span>
         </div>
 
         {/* 3 Member Cards Grid */}
@@ -122,47 +107,37 @@ export default function MemberCardsModal({ onClose }) {
                     transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
                     transition: 'transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1)',
                   }}
-                  className="relative w-full h-full rounded-2xl border border-neutral-800 bg-neutral-900/90 shadow-2xl"
+                  className="relative w-full h-full rounded-2xl border border-neutral-800/90 bg-neutral-900/70 backdrop-blur-md shadow-2xl"
                 >
-                  {/* ================= FRONT SIDE (JUNG / CHOI / JEON) ================= */}
+                  {/* ================= FRONT SIDE ================= */}
                   <div
                     style={{
                       backfaceVisibility: 'hidden',
                       WebkitBackfaceVisibility: 'hidden',
                     }}
-                    className="absolute inset-0 rounded-2xl p-7 flex flex-col justify-between border border-neutral-800/60 bg-gradient-to-b from-neutral-900 via-neutral-950 to-black overflow-hidden"
+                    className="absolute inset-0 rounded-2xl p-7 flex flex-col justify-between border border-neutral-800/60 bg-gradient-to-b from-neutral-900/80 via-neutral-950/80 to-black/90 overflow-hidden"
                   >
-                    {/* Top Tag & Drag Grip */}
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs px-2.5 py-1 rounded bg-neutral-800 text-neutral-300 font-bold border border-neutral-700">
-                        {member.nodeId}
-                      </span>
-                      <div className="flex items-center gap-1 text-neutral-500 hover:text-white">
-                        <GripVertical className="w-4 h-4" />
-                      </div>
-                    </div>
+                    {/* Top spacer (NODE and GripVertical deleted) */}
+                    <div className="h-4" />
 
-                    {/* Center Big Initial Code (JUNG / CHOI / JEON) */}
+                    {/* Center: J, C, J huge without border, and JEON, JUNG, CHOI smaller */}
                     <div className="my-auto flex flex-col items-center justify-center text-center">
-                      <div className="w-16 h-16 rounded-2xl border border-neutral-700 bg-neutral-900/80 flex items-center justify-center mb-6 shadow-inner">
-                        <span className="font-mono font-black text-3xl text-white">
-                          {member.initialChar}
-                        </span>
-                      </div>
+                      {/* Huge J, C, J without border */}
+                      <span className="font-mono font-black text-7xl sm:text-8xl md:text-9xl text-white tracking-tighter drop-shadow-[0_0_35px_rgba(255,255,255,0.4)] mb-2">
+                        {member.initialChar}
+                      </span>
 
-                      <h4 className="font-mono font-black text-4xl sm:text-5xl text-white tracking-widest uppercase mb-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]">
+                      {/* Smaller surname (JUNG, CHOI, JEON) */}
+                      <span className="font-mono font-bold text-lg sm:text-xl text-neutral-400 tracking-widest uppercase">
                         {member.code}
-                      </h4>
-                      <span className="font-mono text-xs text-neutral-500 tracking-wider">
-                        MEMBER IDENTITY
                       </span>
                     </div>
 
                     {/* Bottom Flip Indicator */}
-                    <div className="flex items-center justify-between pt-4 border-t border-neutral-800/80 text-[11px] font-mono text-neutral-400">
-                      <span className="flex items-center gap-1">
+                    <div className="flex items-center justify-between pt-4 border-t border-neutral-800/60 text-[11px] font-mono text-neutral-500">
+                      <span className="flex items-center gap-1.5 hover:text-neutral-300 transition-colors">
                         <RotateCw className="w-3 h-3" />
-                        CLICK TO FLIP
+                        FLIP
                       </span>
                       <span className="text-neutral-600 font-bold">
                         0{index + 1}
@@ -170,14 +145,14 @@ export default function MemberCardsModal({ onClose }) {
                     </div>
                   </div>
 
-                  {/* ================= BACK SIDE (Detailed Story & Info) ================= */}
+                  {/* ================= BACK SIDE ================= */}
                   <div
                     style={{
                       backfaceVisibility: 'hidden',
                       WebkitBackfaceVisibility: 'hidden',
                       transform: 'rotateY(180deg)',
                     }}
-                    className="absolute inset-0 rounded-2xl p-6 flex flex-col justify-between border border-neutral-700 bg-neutral-950 overflow-hidden"
+                    className="absolute inset-0 rounded-2xl p-6 flex flex-col justify-between border border-neutral-700/80 bg-neutral-950/90 backdrop-blur-md overflow-hidden"
                   >
                     <div>
                       {/* Back Header */}
@@ -193,7 +168,7 @@ export default function MemberCardsModal({ onClose }) {
                         <RotateCw className="w-3.5 h-3.5 text-neutral-500 hover:text-white" />
                       </div>
 
-                      {/* Photo & Name */}
+                      {/* Photo & Name (Deleted /images~ filepath) */}
                       <div className="flex items-center gap-3.5 mb-4">
                         <div className="w-14 h-14 rounded-xl border border-neutral-700 bg-neutral-900 overflow-hidden flex-shrink-0 flex items-center justify-center">
                           {!imgErrorMap[member.id] ? (
@@ -218,9 +193,6 @@ export default function MemberCardsModal({ onClose }) {
                           <h5 className="font-extrabold text-xl text-white">
                             {member.name}
                           </h5>
-                          <span className="font-mono text-[10px] text-neutral-500">
-                            {member.image}
-                          </span>
                         </div>
                       </div>
 
@@ -230,7 +202,7 @@ export default function MemberCardsModal({ onClose }) {
                       </div>
                     </div>
 
-                    {/* Bottom Tags */}
+                    {/* Bottom Tags & Close Hint (Deleted right initialChar) */}
                     <div>
                       <div className="flex flex-wrap gap-1 mb-2">
                         {member.tags.slice(0, 3).map((tag, tIdx) => (
@@ -244,7 +216,6 @@ export default function MemberCardsModal({ onClose }) {
                       </div>
                       <div className="pt-2 border-t border-neutral-900 text-[10px] font-mono text-neutral-500 flex justify-between">
                         <span>다시 클릭하면 닫힙니다</span>
-                        <span>{member.initialChar}</span>
                       </div>
                     </div>
                   </div>
