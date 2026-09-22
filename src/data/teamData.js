@@ -6,33 +6,40 @@ export const teamInfo = {
   tags: ["Spatial Interaction", "Interactive Web", "Creative Dev", "University Project"],
 };
 
+// Ordered strictly as J - C - J: 정용진(JUNG), 최지혁(CHOI), 전민혁(JEON)
 export const teamMembers = [
   {
-    id: "minhyeok",
-    name: "전민혁",
-    studentId: "22학번",
-    summary: "공주대 신관캠에서 전과. 디자인적 감각이 우수하며 생각이 깊다. 특히나 노래를 취미로하며 음악적 소양이 다분하다.",
-    image: "/images/minhyeok.jpg",
-    tags: ["22학번", "전과생", "디자인 감각", "음악 & 보컬", "사색가"],
-    accentColor: "jade",
-  },
-  {
     id: "yongjin",
+    code: "JUNG",
+    initialChar: "J",
     name: "정용진",
     studentId: "21학번",
     summary: "군대와 휴학으로 인해 대학교를 초등학생만큼 다닐 예정이다.",
     image: "/images/yongjin.jpg",
     tags: ["21학번", "군필", "초등학생급 재학기간", "근성", "휴학생의 여유"],
-    accentColor: "jade",
+    nodeId: "NODE_01",
   },
   {
     id: "jihyeok",
+    code: "CHOI",
+    initialChar: "C",
     name: "최지혁",
     studentId: "22학번",
     summary: "제품디자인을 본래 전공했으나, 현재 디자인 컨버전스로 바뀌며 시각수업을 울며 듣는다.",
     image: "/images/jihyeok.jpg",
-    tags: ["22학번", "제품디자인", "디자인컨버전스", "시각수업 생존기", "하드웨어 감성"],
-    accentColor: "jade",
+    tags: ["22학번", "제품디자인", "디자인컨버전스", "시각수업 생존기"],
+    nodeId: "NODE_02",
+  },
+  {
+    id: "minhyeok",
+    code: "JEON",
+    initialChar: "J",
+    name: "전민혁",
+    studentId: "22학번",
+    summary: "공주대 신관캠에서 전과. 디자인적 감각이 우수하며 생각이 깊다. 특히나 노래를 취미로하며 음악적 소양이 다분하다.",
+    image: "/images/minhyeok.jpg",
+    tags: ["22학번", "전과생", "디자인 감각", "음악 & 보컬", "사색가"],
+    nodeId: "NODE_03",
   },
 ];
 

@@ -1,65 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ContourBackground from './components/ContourBackground';
 import Hero3D from './components/Hero3D';
-import TeamIntro from './components/TeamIntro';
-import MemberConstellation from './components/MemberConstellation';
-import Project01 from './components/Project01';
-import Footer from './components/Footer';
+import TeamIntroModal from './components/TeamIntroModal';
+import MemberCardsModal from './components/MemberCardsModal';
+import Project01Modal from './components/Project01Modal';
 
 export default function App() {
-  const [isUnlocked, setIsUnlocked] = useState(false);
-
-  const handleSelectSection = (sectionId) => {
-    setIsUnlocked(true);
-
-    setTimeout(() => {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 50);
-  };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 150 && !isUnlocked) {
-        setIsUnlocked(true);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isUnlocked]);
+  const [activeModal, setActiveModal] = useState(null); // 'about' | 'members' | 'project_01' | null
 
   return (
-    <div className="min-h-screen bg-black text-neutral-100 relative font-sans selection:bg-white selection:text-black">
-      {/* Subtle Contour Wave Background Canvas */}
+    <div className="relative w-screen h-screen overflow-hidden bg-black text-neutral-100 font-sans select-none">
+      {/* Subtle Contour Wave Background */}
       <ContourBackground />
 
-      {/* Main Content Area (No top bar) */}
-      <main className="relative z-10">
-        {/* Initial Hero Screen: Pure JCJ + Floating 3D Cubes */}
-        <Hero3D onExploreSection={handleSelectSection} />
+      {/* Main 3D Hero: Center JCJ with hover scatter (3s return) + floating cubes */}
+      <Hero3D />
 
-        {/* Content sections revealed upon interaction or scrolling */}
-        <div
-          className={`transition-opacity duration-700 ${
-            isUnlocked ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-          }`}
+      {/* 3 Individual Standalone Navigation Buttons */}
+      <div className="fixed bottom-10 inset-x-0 z-30 flex items-center justify-center gap-4 sm:gap-8 px-4 pointer-events-none">
+        <button
+          onClick={() => setActiveModal('about')}
+          className="pointer-events-auto font-mono text-xs sm:text-sm tracking-wider px-6 py-3 rounded-xl border border-neutral-800 bg-neutral-950/90 text-neutral-300 hover:text-white hover:border-white hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] backdrop-blur-md transition-all duration-200 active:scale-95 cursor-pointer"
         >
-          {/* Section 1: Team Intro */}
-          <TeamIntro />
+          [ 팀소개 ]
+        </button>
 
-          {/* Section 2: Constellation Member Nodes */}
-          <MemberConstellation />
+        <button
+          onClick={() => setActiveModal('members')}
+          className="pointer-events-auto font-mono text-xs sm:text-sm tracking-wider px-6 py-3 rounded-xl border border-neutral-800 bg-neutral-950/90 text-neutral-300 hover:text-white hover:border-white hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] backdrop-blur-md transition-all duration-200 active:scale-95 cursor-pointer"
+        >
+          [ 팀원소개 ]
+        </button>
 
-          {/* Section 3: Project 01 Blueprint */}
-          <Project01 />
-        </div>
-      </main>
+        <button
+          onClick={() => setActiveModal('project_01')}
+          className="pointer-events-auto font-mono text-xs sm:text-sm tracking-wider px-6 py-3 rounded-xl border border-neutral-800 bg-neutral-950/90 text-neutral-300 hover:text-white hover:border-white hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] backdrop-blur-md transition-all duration-200 active:scale-95 cursor-pointer"
+        >
+          [ project_01 ]
+        </button>
+      </div>
 
-      {/* Footer */}
-      {isUnlocked && <Footer />}
+      {/* Modal Cards */}
+      {activeModal === 'about' && (
+        <TeamIntroModal onClose={() => setActiveModal(null)} />
+      )}
+
+      {activeModal === 'members' && (
+        <MemberCardsModal onClose={() => setActiveModal(null)} />
+      )}
+
+      {activeModal === 'project_01' && (
+        <Project01Modal onClose={() => setActiveModal(null)} />
+      )}
     </div>
   );
 }
