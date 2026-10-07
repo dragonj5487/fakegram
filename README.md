@@ -33,7 +33,10 @@ npm test
 npm run build
 ```
 
-개발 주소: http://localhost:3000/jcj-team/
+개발 주소: http://localhost:3000/fakegram/
+
+공개 플레이 주소: https://dragonj5487.github.io/fakegram/
+GitHub의 main 브랜치에 수정 내용을 올리면 테스트·빌드 후 GitHub Pages에 자동 배포합니다.
 
 React 18, Vite, Tailwind CSS, Lucide 아이콘을 사용합니다.
 테스트는 Node 내장 테스트 러너와 jsdom을 사용합니다.
