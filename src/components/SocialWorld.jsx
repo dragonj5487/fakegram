@@ -55,7 +55,7 @@ export function ProfilePanel({ account, week, openProfile, openStory, openMessag
     <div className="world-profile"><WorldAvatar account={account}/><div><small>{person.handle}</small><h2>{person.name}</h2><span>{person.kind}</span></div></div>
     <p className="profile-bio">{person.bio}</p><p className="world-fiction">게임 속 프로필 · 소개와 공개 게시물은 게임 연출입니다.</p>
     {account === 'boss' && <><button className="primary" onClick={openMessages}><MessageCircle size={16}/>대표님과의 업무 대화</button><button className="profile-link" onClick={() => openProfile('company')}>@decon.official · 디컨 회사 계정 →</button><p className="profile-empty">공개 게시물은 없습니다. 업무 대화는 DM에서 이어집니다.</p></>}
-    {account === 'company' && <><button className="profile-link" onClick={() => openProfile('boss')}>대표 정조은 프로필 →</button><div className="profile-stories">{availableStories(week).map(story => <button key={story.id} onClick={() => openStory(story.id)}>{story.week}주 차<span>{story.title}</span></button>)}</div></>}
+    {account === 'company' && <><button className="profile-link" onClick={() => openProfile('boss')}>대표 윤하은 프로필 →</button><div className="profile-stories">{availableStories(week).map(story => <button key={story.id} onClick={() => openStory(story.id)}>{story.week}주 차<span>{story.title}</span></button>)}</div></>}
     <CommunityFeed week={week} account={account} openProfile={openProfile} social={social}/>
   </WorldDialog>;
 }

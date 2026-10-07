@@ -8,6 +8,23 @@ function memoryStorage() {
   return { getItem: key => data.get(key) ?? null, setItem: (key, value) => data.set(key, value), removeItem: key => data.delete(key) };
 }
 function snapshot(game) { return { game, socials: { official: { liked: true, comments: ['잘 봤어요'], saved: true } }, seenStories: ['story-1'], socialTime: 2, reply: '작성 중인 답장' }; }
+test('old saves update the boss introduction while preserving player text and progress', () => {
+  const storage = memoryStorage();
+  const oldName = '\uC815\uC870\uC740';
+  const intro = `디컨 대표 ${oldName}입니다. 지원해 주셔서 감사해요`;
+  const game = gameReducer(initialGame(), { type: 'START', name: oldName });
+  game.messages = [{ sender: 'boss', text: intro, time: '09:00', week: 1 }, { sender: 'me', text: oldName, time: '09:01', week: 1 }];
+  game.queue[0].text = intro;
+  game.alerts = [intro];
+  saveProgress(snapshot(game), storage);
+  const loaded = loadProgress(storage).snapshot;
+  assert.ok(loaded.game.messages[0].text.includes('대표 윤하은입니다'));
+  assert.ok(loaded.game.queue[0].text.includes('대표 윤하은입니다'));
+  assert.ok(loaded.game.alerts[0].includes('대표 윤하은입니다'));
+  assert.equal(loaded.game.messages[1].text, oldName);
+  assert.equal(loaded.game.name, oldName);
+  assert.equal(loaded.game.phase, game.phase);
+});
 test('save and resume preserve pending deliveries, drafts, reply, reactions and read stories', () => {
   const storage = memoryStorage();
   const game = gameReducer(initialGame(), { type: 'START', name: '지민' });

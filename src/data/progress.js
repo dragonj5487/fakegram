@@ -35,6 +35,12 @@ export function loadProgress(storage) {
     const data = JSON.parse(raw);
     if (data.version !== 1 || !validGame(data.game) || !object(data.socials) || !strings(data.seenStories) || typeof data.reply !== 'string' || !Number.isFinite(data.socialTime) || !Number.isFinite(data.savedAt)) throw new Error('invalid');
     if (!Object.values(data.socials).every(value => object(value) && (value.comments === undefined || strings(value.comments)) && (value.reaction === undefined || typeof value.reaction === 'string'))) throw new Error('invalid');
+    // Update the scripted introduction in old saves without changing player text or progress.
+    const oldIntro = '\uB514\uCEE8 \uB300\uD45C \uC815\uC870\uC740\uC785\uB2C8\uB2E4';
+    const renameIntro = text => text.replaceAll(oldIntro, '디컨 대표 윤하은입니다');
+    data.game.messages = data.game.messages.map(message => message.sender === 'boss' ? { ...message, text: renameIntro(message.text) } : message);
+    data.game.queue = data.game.queue.map(message => ({ ...message, text: renameIntro(message.text) }));
+    data.game.alerts = data.game.alerts.map(renameIntro);
     return { snapshot: data, error: '' };
   } catch { return { snapshot: null, error: '저장 기록을 읽지 못했습니다. 새 게임을 시작할 수 있습니다.' }; }
 }

@@ -71,7 +71,7 @@ export function gameReducer(state, action) {
     case 'START': {
       if (!action.name.trim()) return state;
       const fresh = initialGame(action.name.trim().slice(0, 20));
-      return { ...fresh, started: true, phase: 'greeting', queue: [item(`${fresh.name}님, 안녕하세요! 디컨 대표 정조은입니다. 지원해 주셔서 감사해요 🙂`, null, 1), item('오늘 하루는 어떻게 보내고 계셨어요?', 'smallTalk', 1)] };
+      return { ...fresh, started: true, phase: 'greeting', queue: [item(`${fresh.name}님, 안녕하세요! 디컨 대표 윤하은입니다. 지원해 주셔서 감사해요 🙂`, null, 1), item('오늘 하루는 어떻게 보내고 계셨어요?', 'smallTalk', 1)] };
     }
     case 'DELIVER': {
       if (!state.queue.length) return state;

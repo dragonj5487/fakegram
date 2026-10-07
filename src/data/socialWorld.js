@@ -1,6 +1,6 @@
 export const ACCOUNTS = {
   company: { handle: 'decon.official', name: '디컨', avatar: 'd.', bio: '커피와 AI가 만나는 일상. 디컨의 브랜드와 공간을 기록합니다.', kind: '회사 계정', color: '#e8eee8' },
-  boss: { handle: 'jeongjoeun.ceo', name: '정조은', avatar: '정', bio: '디컨 대표 · 커피와 디자인, 새로운 시작.', kind: '대표 계정', color: '#eeeae5' },
+  boss: { handle: 'yoonhaeun.ceo', name: '윤하은', avatar: '윤', bio: '디컨 대표 · 커피와 디자인, 새로운 시작.', kind: '대표 계정', color: '#eeeae5' },
   peer: { handle: 'yoon.designlog', name: '윤 · 디자인 일기', avatar: '윤', bio: '작업과 생활 사이, 아직 배우는 중입니다.', kind: '가상 인물', color: '#e9e8f0' },
   cafe: { handle: 'slow.seongsu', name: '느린 성수', avatar: '느', bio: '걷다가 만난 카페와 작은 장면들.', kind: '가상 인물', color: '#f2e9de' },
 };

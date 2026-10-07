@@ -70,8 +70,8 @@ test('React screens connect resume, profiles, stories, search, review and restar
     await click(document.querySelector('.world-close'));
     await click(document.querySelectorAll('.suggested-account')[0]);
     assert.ok(document.querySelector('dialog').textContent.includes('디컨'));
-    await click(button('대표 정조은 프로필 →'));
-    assert.ok(document.querySelector('dialog').textContent.includes('jeongjoeun.ceo'));
+    await click(button('대표 윤하은 프로필 →'));
+    assert.ok(document.querySelector('dialog').textContent.includes('yoonhaeun.ceo'));
     await click(button('대표님과의 업무 대화'));
     assert.equal(document.querySelector('textarea').value, '기대됩니다. 작성 중인 답장');
     await fill(document.querySelector('[aria-label="대화 기록 검색"]'), '없는말');
